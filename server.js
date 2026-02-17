@@ -10,16 +10,16 @@ app.use(cors());
 
 app.use(express.static(__dirname));
 
-const DB_URL = process.env.DATABASE_URL || "mysql://u2d6b5duaebwvhb4:DFPP4gU5Xv7tX3BaIJCf@buppvqijao8xm38bxuym-mysql.services.clever-cloud.com:3306/buppvqijao8xm38bxuym";
+const DB_URL = process.env.DATABASE_URL || "mysql://avnadmin:AVNS_eJq96bEJvh_J44PjY8n@mysql-17363d9c-carreromiguel37-1ff4.i.aivencloud.com:25214/defaultdb?ssl-mode=REQUIRED";
 
-const db = mysql.createConnection(DB_URL);
-
-db.connect((err) => {
-    if (err) {
-        console.error('❌ Error base de datos:', err.message);
-        return;
-    }
-    console.log('✅ Conexión exitosa a la base de datos');
+const db = mysql.createPool({
+    uri: DB_URL,
+    ssl: {
+        rejectUnauthorized: false 
+    },
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
 app.post('/registro', async (req, res) => {
@@ -123,3 +123,4 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`🚀 Servidor en puerto ${PORT}`));
+
