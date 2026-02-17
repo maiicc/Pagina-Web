@@ -80,7 +80,7 @@ async function entrar() {
 
             if (res.ok) {
                 const data = await res.json();
-                localStorage.setItem('usuario', data.nombre);
+                localStorage.setItem('usuario', data.nombre_completo);
                 localStorage.setItem('rol', data.rol);
                 localStorage.setItem('id_usuario', data.id_usuario);
                 
@@ -105,4 +105,5 @@ async function entrar() {
     </script>
 </body>
 </html>
+
 
