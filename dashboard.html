@@ -174,7 +174,7 @@ window.onload = async function() {
             cargarDatosReales(nombre);
         } else if (rol === 'Representante') {
             const cedulaHijo = localStorage.getItem('cedula_hijo');
-            const responseHijo = await fetch(`http://localhost:3000/nombre-hijo/${cedulaHijo}`);
+            const responseHijo = await fetch(`http:/nombre-hijo/${cedulaHijo}`);
             const hijo = await responseHijo.json();
             if (hijo.nombre) cargarDatosReales(hijo.nombre);
         }
@@ -197,7 +197,7 @@ async function cambiarSeccion(nombre) {
 async function cargarPerfilReal() {
     const userId = localStorage.getItem('id_usuario');
     try {
-        const res = await fetch(`http://localhost:3000/perfil/${userId}`);
+        const res = await fetch(`http:/perfil/${userId}`);
         const u = await res.json();
         document.getElementById('perf-nombre').innerText = `${u.nombre} ${u.apellido}`;
         document.getElementById('perf-rol').innerText = u.rol;
@@ -214,7 +214,7 @@ async function cargarPerfilReal() {
 
 // RESTO DE FUNCIONES (saveNota, cargarDatosReales, enviarMensaje, etc.)
 async function cargarDatosReales(nombreEstudiante) {
-    const res = await fetch(`http://localhost:3000/mis-notas/${nombreEstudiante}`);
+    const res = await fetch(`http:/mis-notas/${nombreEstudiante}`);
     const notas = await res.json();
     const tabla = document.getElementById('tabla-notas-reales');
     tabla.innerHTML = notas.length ? "" : '<tr><td colspan="4" class="py-4 text-center">Sin notas</td></tr>';
@@ -237,14 +237,14 @@ async function saveNota() {
         nota: document.getElementById('nota').value,
         rol: localStorage.getItem('rol')
     };
-    const res = await fetch('http://localhost:3000/guardar-nota', {
+    const res = await fetch('http:/guardar-nota', {
         method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)
     });
     if(res.ok) { alert("Guardada"); cargarEstadisticasDocente(); }
 }
 
 async function cargarEstadisticasDocente() {
-    const res = await fetch('http://localhost:3000/stats-docente');
+    const res = await fetch('http:/stats-docente');
     const data = await res.json();
     document.getElementById('stat-estudiantes').innerText = data.estudiantes;
     document.getElementById('stat-alertas').innerText = data.alertas;
@@ -252,7 +252,7 @@ async function cargarEstadisticasDocente() {
 }
 
 async function obtenerContactos() {
-    const res = await fetch('http://localhost:3000/usuarios');
+    const res = await fetch('http:/usuarios');
     const usuarios = await res.json();
     const select = document.getElementById('msg-destino');
     select.innerHTML = '<option value="">Seleccione...</option>';
@@ -269,7 +269,7 @@ async function enviarMensaje() {
         asunto: document.getElementById('msg-asunto').value,
         contenido: document.getElementById('msg-cuerpo').value
     };
-    const res = await fetch('http://localhost:3000/enviar-mensaje', {
+    const res = await fetch('http:/enviar-mensaje', {
         method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)
     });
     if(res.ok) { alert("Enviado"); document.getElementById('msg-cuerpo').value = ""; }
@@ -277,7 +277,7 @@ async function enviarMensaje() {
 
 async function obtenerMensajes() {
     const id = localStorage.getItem('id_usuario');
-    const res = await fetch(`http://localhost:3000/mensajes/${id}`);
+    const res = await fetch(`http:/mensajes/${id}`);
     const mensajes = await res.json();
     const cont = document.getElementById('bandeja-mensajes');
     cont.innerHTML = mensajes.length ? "" : '<p class="text-center py-10">Vacío</p>';
