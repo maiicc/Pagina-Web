@@ -1,0 +1,15 @@
+{
+  "name": "CEN Rafael Arévalo González",
+  "short_name": "CEN App",
+  "start_url": "login.html",
+  "display": "standalone",
+  "background_color": "#002D5A",
+  "theme_color": "#002D5A",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2941/2941514.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

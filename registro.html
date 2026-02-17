@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#002D5A">
+    <meta charset="UTF-8">
+    <title>Registro - CEN Rafael Arévalo González</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded shadow-md w-96 border-t-4 border-blue-900">
+        <h2 class="text-2xl font-bold mb-6 text-center text-blue-900">Crear Cuenta</h2>
+        
+        <input type="text" id="nom" placeholder="Nombre" class="w-full mb-3 p-2 border rounded outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="text" id="ape" placeholder="Apellido" class="w-full mb-3 p-2 border rounded outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="text" id="ced" placeholder="Su Cédula" class="w-full mb-3 p-2 border rounded outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="email" id="email" placeholder="Correo" class="w-full mb-3 p-2 border rounded outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="password" id="pass" placeholder="Contraseña" class="w-full mb-3 p-2 border rounded outline-none focus:ring-2 focus:ring-blue-500">
+        
+        <select id="rol" onchange="toggleRepresentante()" class="w-full mb-3 p-2 border rounded outline-none bg-gray-50">
+            <option value="Docente">Docente</option>
+            <option value="Estudiante">Estudiante</option>
+            <option value="Representante">Representante</option>
+        </select>
+
+        <!-- Este div está oculto por defecto y solo se muestra si es Representante -->
+        <div id="caja-hijo" style="display: none;">
+            <p class="text-xs font-bold text-gray-500 mb-1 uppercase">Vincular Estudiante</p>
+            <input type="text" id="ced_hijo" placeholder="Cédula de su representado (Hijo)" class="w-full mb-4 p-2 border rounded border-blue-400 bg-blue-50 outline-none">
+        </div>
+
+        <button onclick="enviarRegistro()" class="w-full bg-green-600 hover:bg-green-700 transition text-white font-bold p-3 rounded">REGISTRARSE</button>
+        <a href="login.html" class="block text-center mt-4 text-sm text-blue-600 hover:underline">Ya tengo cuenta, Iniciar sesión</a>
+    </div>
+
+    <script>
+        // Función para mostrar/ocultar el campo del hijo
+        function toggleRepresentante() {
+            const rol = document.getElementById('rol').value;
+            const cajaHijo = document.getElementById('caja-hijo');
+            if (rol === 'Representante') {
+                cajaHijo.style.display = 'block';
+            } else {
+                cajaHijo.style.display = 'none';
+                document.getElementById('ced_hijo').value = ""; // Limpiar si cambia de opinión
+            }
+        }
+
+        async function enviarRegistro() {
+            const datos = {
+                nombre: document.getElementById('nom').value,
+                apellido: document.getElementById('ape').value,
+                cedula: document.getElementById('ced').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('pass').value,
+                rol: document.getElementById('rol').value,
+                // Capturamos la cédula del hijo (si existe)
+                cedula_hijo: document.getElementById('ced_hijo').value 
+            };
+
+            // Validaciones básicas
+            if(!datos.nombre || !datos.email || !datos.password) {
+                alert("Por favor llene los campos principales.");
+                return;
+            }
+
+            const res = await fetch('http://localhost:3000/registro', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(datos)
+            });
+            
+            if(res.ok) {
+                const result = await res.json();
+                alert(result.mensaje);
+                window.location.href = 'login.html';
+            } else {
+                const err = await res.text();
+                alert("Error: " + err);
+            }
+        }
+    </script>
+</body>
+</html>
