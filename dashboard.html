@@ -1,127 +1,198 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#002D5A">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
-    <title>Panel de Control - CEN</title>
+    <title>CEN Rafael Arévalo González - Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .sidebar { background-color: #002D5A; transition: 0.3s; }
-        .seccion-app { display: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .sidebar { background: linear-gradient(180deg, #002D5A 0%, #001A35 100%); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .seccion-app { display: none; animation: fadeIn 0.4s ease-out; }
         .seccion-app.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #002D5A; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-slate-100 flex h-screen overflow-hidden text-gray-800">
+<body class="bg-slate-50 flex h-screen overflow-hidden text-slate-700">
 
-    <div id="menu-overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
+    <!-- Overlay para móvil -->
+    <div id="menu-overlay" onclick="toggleMenu()" class="fixed inset-0 bg-slate-900/40 z-40 hidden backdrop-blur-sm lg:hidden"></div>
 
+    <!-- SIDEBAR -->
     <aside id="sidebar" class="sidebar w-64 text-white flex flex-col fixed inset-y-0 left-0 z-50 transform -translate-x-full lg:translate-x-0 lg:static shadow-2xl">
-        <div class="p-6 border-b border-blue-800 flex justify-between items-center">
-            <h1 class="text-[10px] font-bold uppercase tracking-widest">CEN Rafael Arévalo <br> González</h1>
-            <button onclick="toggleMenu()" class="lg:hidden text-white"><i class="fas fa-times"></i></button>
+        <div class="p-6 border-b border-white/10 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-university text-2xl text-blue-300"></i>
+                <h1 class="text-[10px] font-bold tracking-widest uppercase leading-tight">CEN <br> Arévalo González</h1>
+            </div>
+            <button onclick="toggleMenu()" class="lg:hidden text-white/50"><i class="fas fa-times"></i></button>
         </div>
-        <nav class="flex-1 p-4 space-y-2">
-            <button onclick="cambiarSeccion('inicio')" class="w-full flex items-center space-x-3 p-3 rounded-xl hover:bg-blue-800"><i class="fas fa-home"></i><span>Inicio</span></button>
-            <button onclick="cambiarSeccion('mensajeria')" class="w-full flex items-center space-x-3 p-3 rounded-xl hover:bg-blue-800"><i class="fas fa-envelope"></i><span>Mensajería</span></button>
-            <button onclick="cambiarSeccion('perfil')" class="w-full flex items-center space-x-3 p-3 rounded-xl hover:bg-blue-800"><i class="fas fa-user-circle"></i><span>Perfil</span></button>
+
+        <nav class="flex-1 p-4 space-y-2 mt-4">
+            <button onclick="cambiarSeccion('inicio')" class="w-full flex items-center space-x-4 p-3 rounded-xl hover:bg-white/10 transition-all group">
+                <i class="fas fa-th-large opacity-50 group-hover:text-blue-300"></i> <span class="text-sm font-medium">Inicio</span>
+            </button>
+            <button onclick="cambiarSeccion('mensajeria')" class="w-full flex items-center space-x-4 p-3 rounded-xl hover:bg-white/10 transition-all group">
+                <i class="fas fa-comment-alt opacity-50 group-hover:text-blue-300"></i> <span class="text-sm font-medium">Mensajería</span>
+            </button>
+            <button onclick="cambiarSeccion('perfil')" class="w-full flex items-center space-x-4 p-3 rounded-xl hover:bg-white/10 transition-all group">
+                <i class="fas fa-user-circle opacity-50 group-hover:text-blue-300"></i> <span class="text-sm font-medium">Mi Perfil</span>
+            </button>
         </nav>
-        <button onclick="cerrarSesion()" class="m-4 p-3 bg-red-600 rounded-xl font-bold flex items-center justify-center space-x-2"><i class="fas fa-power-off"></i><span>SALIR</span></button>
+
+        <div class="p-4">
+            <button onclick="cerrarSesion()" class="w-full p-3 bg-red-500/10 hover:bg-red-500 transition-all rounded-xl font-bold flex items-center justify-center space-x-2 text-red-400 hover:text-white border border-red-500/20">
+                <i class="fas fa-power-off text-xs"></i> <span class="text-xs uppercase tracking-widest">Salir</span>
+            </button>
+        </div>
     </aside>
 
+    <!-- CONTENIDO PRINCIPAL -->
     <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header class="bg-white p-4 flex justify-between items-center border-b px-6">
+        
+        <!-- TOPBAR -->
+        <header class="bg-white/80 backdrop-blur-md p-4 flex justify-between items-center border-b border-slate-200 px-6 md:px-10">
             <div class="flex items-center space-x-4">
-                <button onclick="toggleMenu()" class="lg:hidden text-blue-900 text-xl"><i class="fas fa-bars"></i></button>
-                <h2 id="page-title" class="font-black text-blue-900 uppercase text-sm">INICIO</h2>
-            </div>
-            <div class="flex items-center space-x-2">
-                <div class="text-right hidden sm:block">
-                    <p id="userName" class="text-xs font-bold"></p>
-                    <p id="userRol" class="text-[9px] text-blue-500 font-black uppercase"></p>
+                <button onclick="toggleMenu()" class="lg:hidden w-10 h-10 flex items-center justify-center bg-slate-100 rounded-xl text-blue-900"><i class="fas fa-bars"></i></button>
+                <div>
+                    <p class="text-[9px] font-black text-blue-500 uppercase tracking-[0.2em]" id="userRol">Cargando...</p>
+                    <h2 id="page-title" class="font-extrabold text-slate-800 text-lg tracking-tight uppercase">INICIO</h2>
                 </div>
-                <div class="w-8 h-8 bg-blue-900 rounded-full flex items-center justify-center text-white text-xs"><i class="fas fa-user"></i></div>
+            </div>
+            <div class="flex items-center space-x-3 bg-slate-50 p-1.5 pr-4 rounded-2xl border border-slate-100">
+                <div class="w-8 h-8 bg-blue-900 rounded-xl flex items-center justify-center text-white text-xs shadow-lg"><i class="fas fa-user"></i></div>
+                <p id="userName" class="text-xs font-bold text-slate-700 hidden sm:block"></p>
             </div>
         </header>
 
-        <div class="p-4 md:p-8 overflow-y-auto flex-1">
+        <div class="p-4 md:p-10 overflow-y-auto flex-1 space-y-8">
             
+            <!-- 1. VISTA INICIO -->
             <div id="vista-inicio" class="seccion-app active">
-                <!-- DOCENTE -->
+                
+                <!-- PANEL DOCENTE -->
                 <section id="section-docente" class="hidden space-y-6">
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="bg-white p-4 rounded-2xl border-l-4 border-blue-500 shadow-sm">
-                            <p class="text-[9px] font-bold text-gray-400 uppercase">Estudiantes</p>
-                            <p id="stat-estudiantes" class="text-2xl font-black">0</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
+                        <div class="glass-card p-6 rounded-[2rem] shadow-xl shadow-blue-900/5 border-l-8 border-blue-500">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Estudiantes</p>
+                            <p id="stat-estudiantes" class="text-3xl font-black text-slate-800">0</p>
                         </div>
-                        <div class="bg-white p-4 rounded-2xl border-l-4 border-red-500 shadow-sm">
-                            <p class="text-[9px] font-bold text-gray-400 uppercase">En Riesgo</p>
-                            <p id="stat-alertas" class="text-2xl font-black text-red-600">0</p>
+                        <div class="glass-card p-6 rounded-[2rem] shadow-xl shadow-red-900/5 border-l-8 border-red-500">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">En Riesgo</p>
+                            <p id="stat-alertas" class="text-3xl font-black text-red-600">0</p>
                         </div>
-                        <div class="bg-white p-4 rounded-2xl border-l-4 border-green-500 shadow-sm">
-                            <p class="text-[9px] font-bold text-gray-400 uppercase">Notas Subidas</p>
-                            <p id="stat-evaluaciones" class="text-2xl font-black">0</p>
+                        <div class="glass-card p-6 rounded-[2rem] shadow-xl shadow-green-900/5 border-l-8 border-green-500">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Evaluaciones</p>
+                            <p id="stat-evaluaciones" class="text-3xl font-black text-slate-800">0</p>
                         </div>
                     </div>
                     
-                    <div class="bg-white p-6 rounded-3xl shadow-lg border border-gray-100">
-                        <h3 class="text-sm font-bold text-blue-900 mb-4 uppercase tracking-tighter">Registrar Calificación</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2">
-                            <input type="text" id="nom_est" placeholder="Nombre Est." class="p-2 border rounded-lg text-xs">
-                            <input type="text" id="ape_est" placeholder="Apellido Est." class="p-2 border rounded-lg text-xs">
-                            <select id="mat" class="p-2 border rounded-lg text-xs"><option>Matemáticas</option><option>Castellano</option><option>Informática</option></select>
-                            <input type="number" id="nota" placeholder="Nota" class="p-2 border rounded-lg text-xs">
-                            <button onclick="saveNota()" class="bg-blue-900 text-white rounded-lg font-bold text-xs py-2">GUARDAR</button>
+                    <div class="bg-white p-6 md:p-8 rounded-[2.5rem] shadow-2xl border border-slate-100">
+                        <h3 class="text-sm font-black text-slate-800 mb-6 flex items-center space-x-2 uppercase tracking-tighter">
+                            <span class="w-6 h-6 bg-blue-600 rounded-lg flex items-center justify-center text-white text-[10px]"><i class="fas fa-plus"></i></span>
+                            <span>Registrar Nueva Calificación</span>
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                            <input type="text" id="nom_est" placeholder="Nombre Est." class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 transition-all">
+                            <input type="text" id="ape_est" placeholder="Apellido Est." class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 transition-all">
+                            <select id="mat" class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-600"><option>Matemáticas</option><option>Castellano</option><option>Informática</option></select>
+                            <input type="number" id="nota" placeholder="Nota" class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500">
+                            <button onclick="saveNota()" class="bg-blue-600 text-white rounded-xl font-bold text-xs hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">GUARDAR</button>
                         </div>
                     </div>
                 </section>
 
-                <!-- ESTUDIANTE / REP -->
+                <!-- PANEL ESTUDIANTE / REPRESENTANTE -->
                 <section id="section-estudiante" class="hidden space-y-6">
-                    <div class="bg-gradient-to-r from-blue-900 to-blue-700 p-6 rounded-3xl text-white shadow-xl">
-                        <h3 class="text-xl font-bold">Resumen Académico</h3>
-                        <div class="mt-4 flex space-x-10">
-                            <div><p class="text-[9px] uppercase opacity-60">Promedio</p><p class="text-3xl font-black">--</p></div>
-                            <div><p class="text-[9px] uppercase opacity-60">Asistencia</p><p class="text-3xl font-black">95%</p></div>
+                    <div class="bg-gradient-to-br from-blue-800 to-indigo-950 p-8 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
+                        <div class="relative z-10">
+                            <h3 class="text-2xl font-black italic tracking-tight">Tu Rendimiento Actual</h3>
+                            <p class="opacity-60 text-[10px] font-bold tracking-[0.2em] uppercase mt-1">Sección 8B • CEN Rafael Arévalo González</p>
+                            <div class="mt-8 flex space-x-10">
+                                <div class="bg-white/10 p-4 rounded-2xl border border-white/10">
+                                    <p class="text-[9px] font-bold uppercase opacity-50 mb-1">Promedio</p>
+                                    <p id="promedio-est" class="text-4xl font-black text-blue-300">--</p>
+                                </div>
+                                <div class="p-4">
+                                    <p class="text-[9px] font-bold uppercase opacity-50 mb-1">Asistencia</p>
+                                    <p class="text-4xl font-black">95%</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="bg-white p-4 rounded-2xl shadow-md overflow-x-auto">
-                        <table class="w-full text-left min-w-[400px]">
-                            <thead>
-                                <tr class="text-[9px] font-bold uppercase text-gray-400 border-b"><th class="pb-2">Asignatura</th><th class="pb-2 text-center">Nota</th><th class="pb-2 text-center">Fecha</th><th class="pb-2 text-center">Estado</th></tr>
-                            </thead>
-                            <tbody id="tabla-notas-reales" class="text-xs"></tbody>
-                        </table>
+
+                    <div class="bg-white p-6 md:p-8 rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden">
+                        <h3 class="font-black text-slate-800 text-sm mb-6 uppercase tracking-widest italic">Historial de Calificaciones</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left min-w-[500px]">
+                                <thead>
+                                    <tr class="text-[10px] font-black uppercase text-slate-400 tracking-widest border-b pb-4">
+                                        <th class="pb-4 pl-4">Asignatura</th>
+                                        <th class="pb-4 text-center">Nota</th>
+                                        <th class="pb-4 text-center">Fecha</th>
+                                        <th class="pb-4 text-center">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-notas-reales" class="divide-y divide-slate-50 text-sm"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
             </div>
 
-            <div id="vista-mensajeria" class="seccion-app space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div class="bg-white p-4 rounded-2xl shadow h-fit space-y-2">
-                        <select id="msg-destino" class="w-full border p-2 rounded-lg text-xs"></select>
-                        <input type="text" id="msg-asunto" placeholder="Asunto" class="w-full border p-2 rounded-lg text-xs">
-                        <textarea id="msg-cuerpo" placeholder="Mensaje..." class="w-full border p-2 rounded-lg h-24 text-xs"></textarea>
-                        <button onclick="enviarMensaje()" class="w-full bg-blue-900 text-white font-bold p-2 rounded-lg text-xs">ENVIAR</button>
+            <!-- 2. MENSAJERÍA -->
+            <div id="vista-mensajeria" class="seccion-app space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-[2rem] shadow-xl border border-slate-100 space-y-4 h-fit">
+                        <h3 class="text-xs font-black text-blue-900 uppercase tracking-widest mb-2 italic">Redactar Mensaje</h3>
+                        <select id="msg-destino" class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs outline-none font-bold text-slate-500"></select>
+                        <input type="text" id="msg-asunto" placeholder="Asunto" class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs outline-none">
+                        <textarea id="msg-cuerpo" placeholder="Mensaje..." class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl h-32 text-xs outline-none resize-none"></textarea>
+                        <button onclick="enviarMensaje()" class="w-full bg-blue-900 text-white font-black p-3 rounded-xl text-xs tracking-widest hover:bg-blue-800 shadow-lg shadow-blue-100">ENVIAR</button>
                     </div>
-                    <div id="bandeja-mensajes" class="sm:col-span-2 space-y-2"></div>
+                    <div class="lg:col-span-2 space-y-3" id="bandeja-mensajes"></div>
                 </div>
             </div>
 
+            <!-- 3. PERFIL -->
             <div id="vista-perfil" class="seccion-app">
-                <div class="max-w-xs mx-auto bg-white rounded-3xl shadow-xl overflow-hidden text-center p-6 border border-gray-100">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto flex items-center justify-center text-blue-900 text-2xl mb-4"><i class="fas fa-id-badge"></i></div>
-                    <h3 id="perf-nombre" class="font-bold text-gray-800"></h3>
-                    <p id="perf-rol" class="text-[9px] font-black text-blue-500 uppercase"></p>
-                    <div class="mt-4 pt-4 border-t text-left text-xs space-y-2">
-                        <p><strong>Cédula:</strong> <span id="perf-cedula"></span></p>
-                        <p><strong>Email:</strong> <span id="perf-email"></span></p>
-                        <div id="perf-hijo-box" class="hidden p-2 bg-blue-50 rounded italic text-[10px]">Representado: <span id="perf-hijo"></span></div>
+                <div class="max-w-md mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-slate-100">
+                    <div class="h-32 bg-blue-900 flex items-center justify-center relative">
+                        <div class="absolute -bottom-12 w-24 h-24 bg-white rounded-[2rem] p-1.5 shadow-2xl">
+                            <div class="w-full h-full bg-blue-50 rounded-[1.5rem] flex items-center justify-center text-blue-900 text-3xl font-bold">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-10 pt-16 text-center">
+                        <h3 id="perf-nombre" class="text-xl font-black text-slate-800 uppercase tracking-tight italic">Cargando...</h3>
+                        <p id="perf-rol" class="text-blue-500 font-black uppercase text-[9px] tracking-[0.3em] mb-8"></p>
+                        
+                        <div class="space-y-3 text-left">
+                            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
+                                <span class="text-[9px] font-black text-slate-400 uppercase">Cédula</span>
+                                <span id="perf-cedula" class="font-bold text-slate-700 text-sm"></span>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
+                                <span class="text-[9px] font-black text-slate-400 uppercase">Email</span>
+                                <span id="perf-email" class="font-bold text-slate-700 text-sm"></span>
+                            </div>
+                            <div id="perf-hijo-box" class="hidden p-4 bg-blue-50 rounded-2xl border border-blue-100 border-dashed">
+                                <p class="text-[8px] font-black text-blue-400 uppercase mb-1">Hijo Representado</p>
+                                <p id="perf-hijo" class="font-black text-blue-900"></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
+            
         </div>
     </main>
 
@@ -147,9 +218,11 @@ window.onload = async function() {
         if (rol === 'Estudiante') {
             cargarDatosReales(nombre);
         } else {
-            const res = await fetch(`/nombre-hijo/${localStorage.getItem('cedula_hijo')}`);
-            const hijo = await res.json();
-            if (hijo.nombre_completo) cargarDatosReales(hijo.nombre_completo);
+            try {
+                const res = await fetch(`/nombre-hijo/${localStorage.getItem('cedula_hijo')}`);
+                const hijo = await res.json();
+                if (hijo.nombre_completo) cargarDatosReales(hijo.nombre_completo);
+            } catch(e) { console.error("Error vínculo hijo"); }
         }
     }
 };
@@ -158,7 +231,10 @@ async function cambiarSeccion(nombre) {
     document.querySelectorAll('.seccion-app').forEach(div => div.classList.remove('active'));
     document.getElementById('vista-' + nombre).classList.add('active');
     document.getElementById('page-title').innerText = nombre.toUpperCase();
-    if (window.innerWidth < 1024) toggleMenu();
+    if (window.innerWidth < 1024) {
+        const sidebar = document.getElementById('sidebar');
+        if(!sidebar.classList.contains('-translate-x-full')) toggleMenu();
+    }
 
     if(nombre === 'mensajeria') { obtenerContactos(); obtenerMensajes(); }
     if(nombre === 'perfil') cargarPerfil();
@@ -181,22 +257,45 @@ async function cargarDatosReales(nombreEst) {
     const res = await fetch(`/mis-notas/${nombreEst}`);
     const notas = await res.json();
     const tabla = document.getElementById('tabla-notas-reales');
-    tabla.innerHTML = notas.length ? "" : '<tr><td colspan="4" class="py-10 text-center">Sin notas</td></tr>';
+    tabla.innerHTML = notas.length ? "" : '<tr><td colspan="4" class="py-10 text-center text-slate-300">Sin registros académicos</td></tr>';
     let suma = 0;
     notas.forEach(n => {
         suma += n.nota;
-        const color = n.nota >= 10 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
-        tabla.innerHTML += `<tr class="border-b"><td class="py-3 font-bold">${n.asignatura}</td><td class="text-center font-black">${n.nota}</td><td class="text-center opacity-40">${new Date(n.fecha_registro).toLocaleDateString()}</td><td class="text-center"><span class="${color} px-2 py-0.5 rounded-full text-[8px] font-bold uppercase">${n.nota >= 10 ? 'Ok' : 'Riesgo'}</span></td></tr>`;
+        const pass = n.nota >= 10;
+        const color = pass ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50';
+        tabla.innerHTML += `
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="py-5 pl-4 font-bold text-slate-700">${n.asignatura}</td>
+                <td class="text-center font-black text-lg">${n.nota}</td>
+                <td class="text-center text-[10px] font-bold text-slate-300">${new Date(n.fecha_registro).toLocaleDateString()}</td>
+                <td class="text-center">
+                    <span class="${color} px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border">
+                        ${pass ? 'Aprobado' : 'Riesgo'}
+                    </span>
+                </td>
+            </tr>`;
     });
-    if(notas.length) document.querySelector('.text-3xl.font-black').innerText = (suma/notas.length).toFixed(1);
+    if(notas.length) document.getElementById('promedio-est').innerText = (suma/notas.length).toFixed(1);
 }
 
 async function saveNota() {
     const n = document.getElementById('nom_est').value;
     const a = document.getElementById('ape_est').value;
-    const data = { estudiante: `${n} ${a}`, asignatura: document.getElementById('mat').value, nota: document.getElementById('nota').value, rol: localStorage.getItem('rol') };
+    if(!n || !a || !document.getElementById('nota').value) return alert("Complete los datos");
+    
+    const data = { 
+        estudiante: `${n} ${a}`, 
+        asignatura: document.getElementById('mat').value, 
+        nota: document.getElementById('nota').value, 
+        rol: localStorage.getItem('rol') 
+    };
     const res = await fetch('/guardar-nota', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data)});
-    if(res.ok) { alert("¡Éxito!"); cargarEstadisticasDocente(); }
+    if(res.ok) { 
+        alert("✅ Nota registrada exitosamente"); 
+        document.getElementById('nom_est').value = ""; 
+        document.getElementById('ape_est').value = ""; 
+        cargarEstadisticasDocente(); 
+    }
 }
 
 async function cargarEstadisticasDocente() {
@@ -211,22 +310,45 @@ async function obtenerContactos() {
     const res = await fetch('/usuarios');
     const us = await res.json();
     const sel = document.getElementById('msg-destino');
-    sel.innerHTML = '<option value="">Para...</option>';
-    us.forEach(u => { if(u.id_usuario != localStorage.getItem('id_usuario')) sel.innerHTML += `<option value="${u.id_usuario}">${u.nombre} (${u.rol})</option>`; });
+    sel.innerHTML = '<option value="">Seleccione Contacto...</option>';
+    us.forEach(u => { 
+        if(u.id_usuario != localStorage.getItem('id_usuario')) 
+            sel.innerHTML += `<option value="${u.id_usuario}">${u.nombre} ${u.apellido} (${u.rol})</option>`; 
+    });
 }
 
 async function enviarMensaje() {
-    const d = { remitente_id: localStorage.getItem('id_usuario'), destinatario_id: document.getElementById('msg-destino').value, asunto: document.getElementById('msg-asunto').value, contenido: document.getElementById('msg-cuerpo').value };
+    const d = { 
+        remitente_id: localStorage.getItem('id_usuario'), 
+        destinatario_id: document.getElementById('msg-destino').value, 
+        asunto: document.getElementById('msg-asunto').value, 
+        contenido: document.getElementById('msg-cuerpo').value 
+    };
+    if(!d.destinatario_id || !d.contenido) return alert("Complete el mensaje");
     const res = await fetch('/enviar-mensaje', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(d)});
-    if(res.ok) { alert("Enviado"); document.getElementById('msg-cuerpo').value = ""; }
+    if(res.ok) { 
+        alert("✅ Mensaje enviado"); 
+        document.getElementById('msg-asunto').value = ""; 
+        document.getElementById('msg-cuerpo').value = ""; 
+    }
 }
 
 async function obtenerMensajes() {
     const res = await fetch(`/mensajes/${localStorage.getItem('id_usuario')}`);
     const ms = await res.json();
     const cont = document.getElementById('bandeja-mensajes');
-    cont.innerHTML = ms.length ? "" : '<p class="text-center py-10 opacity-30">Vacío</p>';
-    ms.forEach(m => { cont.innerHTML += `<div class="bg-white p-3 rounded-xl border-l-4 border-blue-900 shadow-sm"><p class="text-[8px] font-bold text-blue-500 uppercase">De: ${m.nombre_remitente}</p><h4 class="text-[10px] font-black uppercase">${m.asunto || 'Aviso'}</h4><p class="text-[11px] text-gray-600 mt-1">${m.contenido}</p></div>`; });
+    cont.innerHTML = ms.length ? "" : '<div class="bg-white p-10 text-center rounded-[2rem] opacity-30 italic text-sm">Bandeja de entrada vacía</div>';
+    ms.forEach(m => { 
+        cont.innerHTML += `
+            <div class="bg-white p-5 rounded-2xl border-l-4 border-blue-900 shadow-sm hover:shadow-md transition-all">
+                <div class="flex justify-between items-center mb-2">
+                    <p class="text-[9px] font-black text-blue-500 uppercase tracking-widest">De: ${m.nombre_remitente}</p>
+                    <span class="text-[8px] text-slate-300 font-bold">${new Date(m.fecha_envio).toLocaleTimeString()}</span>
+                </div>
+                <h4 class="text-xs font-black uppercase text-slate-700 mb-1">${m.asunto || 'Aviso Institucional'}</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">${m.contenido}</p>
+            </div>`; 
+    });
 }
 
 function cerrarSesion() { localStorage.clear(); window.location.href = 'login.html'; }
