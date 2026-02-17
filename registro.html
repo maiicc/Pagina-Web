@@ -85,21 +85,31 @@
             }
         }
 
-        async function enviarRegistro() {
-            const datos = {
-                nombre: document.getElementById('nom').value,
-                apellido: document.getElementById('ape').value,
-                cedula: document.getElementById('ced').value,
-                email: document.getElementById('email').value,
-                password: document.getElementById('pass').value,
-                rol: document.getElementById('rol').value,
-                cedula_hijo: document.getElementById('ced_hijo').value 
-            };
+          async function enviarRegistro() {
+    const email = document.getElementById('email').value;
+    // Expresión regular para validar formato de correo
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            if(!datos.nombre || !datos.email || !datos.password || !datos.cedula) {
-                alert("⚠️ Por favor, complete los campos obligatorios.");
-                return;
-            }
+    const datos = {
+        nombre: document.getElementById('nom').value,
+        apellido: document.getElementById('ape').value,
+        cedula: document.getElementById('ced').value,
+        email: email,
+        password: document.getElementById('pass').value,
+        rol: document.getElementById('rol').value,
+        cedula_hijo: document.getElementById('ced_hijo').value 
+    };
+
+    // Validación estricta
+    if(!emailRegex.test(email)) {
+        alert("⚠️ Por favor, ingrese un correo electrónico válido (ejemplo@correo.com).");
+        return;
+    }
+
+    if(!datos.nombre || !datos.password || !datos.cedula) {
+        alert("⚠️ Por favor, complete todos los campos obligatorios.");
+        return;
+    }
 
             try {
                 const res = await fetch('/registro', {
@@ -123,3 +133,4 @@
     </script>
 </body>
 </html>
+
