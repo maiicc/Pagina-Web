@@ -16,14 +16,13 @@
         .seccion-app { display: none; animation: fadeIn 0.4s ease-out; }
         .seccion-app.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .role-section { display: none; } /* Se controla por JS */
+        .role-section { display: none; }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #002D5A; border-radius: 10px; }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden text-slate-700">
 
-    <!-- Overlay para móvil -->
     <div id="menu-overlay" onclick="toggleMenu()" class="fixed inset-0 bg-slate-900/40 z-40 hidden backdrop-blur-sm lg:hidden"></div>
 
     <!-- SIDEBAR -->
@@ -68,9 +67,16 @@
                 </div>
             </div>
             
-            <div class="flex items-center space-x-3 bg-slate-50 p-1.5 pr-5 rounded-2xl border border-slate-100">
-                <div class="w-10 h-10 bg-blue-900 rounded-xl flex items-center justify-center text-white shadow-lg"><i class="fas fa-user"></i></div>
-                <p id="userName" class="text-xs font-bold text-slate-700 hidden sm:block"></p>
+            <div class="flex items-center space-x-3">
+                <!-- BOTÓN RECARGAR (Especial para Móvil) -->
+                <button onclick="location.reload()" class="w-10 h-10 flex items-center justify-center bg-slate-50 border border-slate-100 rounded-xl text-blue-600 hover:bg-blue-100 transition-all active:scale-90 shadow-sm">
+                    <i class="fas fa-sync-alt text-xs"></i>
+                </button>
+
+                <div class="flex items-center space-x-3 bg-slate-50 p-1.5 pr-5 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-10 h-10 bg-blue-900 rounded-xl flex items-center justify-center text-white shadow-lg"><i class="fas fa-user"></i></div>
+                    <p id="userName" class="text-xs font-bold text-slate-700 hidden sm:block"></p>
+                </div>
             </div>
         </header>
 
@@ -113,15 +119,12 @@
                 <!-- ROL: ESTUDIANTE / REP -->
                 <section id="section-estudiante" class="role-section space-y-8">
                     <div class="bg-gradient-to-br from-blue-700 via-blue-900 to-indigo-950 p-10 rounded-[3rem] text-white shadow-2xl">
-                        <h3 class="text-2xl font-black italic tracking-tighter mb-2">Resumen Académico</h3>
-                        <div class="mt-8 flex space-x-12">
-                            <div class="bg-white/10 p-5 rounded-[2rem] border border-white/10">
-                                <p class="text-[10px] font-black uppercase opacity-60 mb-1">Promedio</p>
-                                <p id="promedio-est" class="text-5xl font-black">--</p>
-                            </div>
-                            <div class="p-5">
-                                <p class="text-[10px] font-black uppercase opacity-60 mb-1">Asistencia</p>
-                                <p class="text-5xl font-black">95%</p>
+                        <h3 class="text-2xl font-black italic tracking-tighter mb-2 text-blue-100">Resumen Académico</h3>
+                        <p class="opacity-60 text-[10px] font-bold tracking-[0.3em] uppercase mb-8 text-white">Periodo 2025-2026 • 3er Año Sección 8B</p>
+                        <div class="flex items-center">
+                            <div class="bg-white/10 p-6 rounded-[2.5rem] border border-white/10 shadow-inner">
+                                <p class="text-[10px] font-black uppercase opacity-60 tracking-widest mb-2 text-blue-300">Promedio General</p>
+                                <p id="promedio-est" class="text-6xl font-black text-white">--</p>
                             </div>
                         </div>
                     </div>
@@ -183,7 +186,6 @@ function toggleMenu() {
     overlay.classList.toggle('hidden');
 }
 
-// INICIO DEL SISTEMA (WINDOW ONLOAD)
 window.onload = async function() {
     const nombre = localStorage.getItem('usuario');
     const rol = localStorage.getItem('rol');
@@ -192,14 +194,13 @@ window.onload = async function() {
     document.getElementById('userName').innerText = nombre;
     document.getElementById('userRol').innerText = rol;
 
-    // MOSTRAR CONTENIDO SEGÚN ROL
     if (rol === 'Docente') {
         const secDocente = document.getElementById('section-docente');
-        secDocente.style.display = 'block'; // Forzar visibilidad
+        secDocente.style.display = 'block';
         cargarEstadisticasDocente();
     } else {
         const secEstudiante = document.getElementById('section-estudiante');
-        secEstudiante.style.display = 'block'; // Forzar visibilidad
+        secEstudiante.style.display = 'block';
         
         if (rol === 'Estudiante') {
             cargarDatosReales(nombre);
@@ -213,7 +214,6 @@ window.onload = async function() {
     }
 };
 
-// NAVEGACIÓN ENTRE PESTAÑAS
 async function cambiarSeccion(nombre) {
     document.querySelectorAll('.seccion-app').forEach(div => div.classList.remove('active'));
     const vistaDestino = document.getElementById('vista-' + nombre);
@@ -221,7 +221,6 @@ async function cambiarSeccion(nombre) {
     
     document.getElementById('page-title').innerText = nombre.toUpperCase();
 
-    // Si volvemos a Inicio, asegurar que se vea la sección del rol
     if(nombre === 'inicio') {
         const rol = localStorage.getItem('rol');
         const idSec = rol === 'Docente' ? 'section-docente' : 'section-estudiante';
@@ -325,4 +324,3 @@ function cerrarSesion() { localStorage.clear(); window.location.href = 'login.ht
 </script>
 </body>
 </html>
-
