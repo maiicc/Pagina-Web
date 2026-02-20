@@ -1,6 +1,6 @@
 {
   "name": "CEN Rafael Arévalo González",
-  "short_name": "CEN App",
+  "short_name": "RAG App",
   "start_url": "login.html",
   "display": "standalone",
   "background_color": "#002D5A",
@@ -14,3 +14,4 @@
   ]
 
 }
+
