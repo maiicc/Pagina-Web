@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(__dirname));
 
-const DB_URL = process.env.DATABASE_URL || "mysql://avnadmin:AVNS_eJq96bEJvh_J44PjY8n@mysql-17363d9c-carreromiguel37-1ff4.i.aivencloud.com:25214/defaultdb?ssl-mode=REQUIRED";
+const DB_URL = process.env.DATABASE_URL;
 
 const db = mysql.createPool({
     uri: DB_URL,
@@ -123,3 +123,4 @@ app.get('*', (req, res) => { res.sendFile(path.join(__dirname, 'login.html')); }
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Servidor en puerto ${PORT}`));
+
